@@ -14,7 +14,7 @@ helm repo update > /dev/null
 STACK="csi-s3"
 CHART="yandex-s3/csi-s3"
 CHART_VERSION="0.41.0"
-NAMESPACE="kube-system"
+NAMESPACE="csi-s3"
 
 if [ -z "${MP_KUBERNETES}" ]; then
   # use local version of values.yml

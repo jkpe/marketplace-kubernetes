@@ -6,7 +6,7 @@ set -e
 # chart
 ################################################################################
 STACK="csi-s3"
-NAMESPACE="kube-system"
+NAMESPACE="csi-s3"
 
 
 helm uninstall "$STACK" \
