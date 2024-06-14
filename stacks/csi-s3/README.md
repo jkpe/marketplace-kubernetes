@@ -7,19 +7,17 @@ By default, csi-s3 will create a new bucket per volume. The bucket name will mat
 **Note:**
 As S3 is not a real file system there are some [limitations](https://github.com/yandex-cloud/geesefs#posix-compatibility-matrix) to consider.
 
-## About DigitalOcean Spaces Object Storage
-
-> [Spaces Object Storage](https://www.digitalocean.com/products/spaces) is an S3-compatible object storage service that lets you store and serve large amounts of data. Each Space is a bucket for you to store and serve files. The built-in Spaces CDN minimizes page load times and improves performance.
+> *[DigitalOcean Spaces Object Storage](https://www.digitalocean.com/products/spaces) is an S3-compatible object storage service that lets you store and serve large amounts of data. Each Space is a bucket for you to store and serve files. The built-in Spaces CDN minimizes page load times and improves performance.*
 
 ## About GeeseFS
 
-> Finally, an exemplary FUSE FS implementation over S3
+> *Finally, an exemplary FUSE FS implementation over S3*
 
 - [GeeseFS](https://github.com/yandex-cloud/geesefs) allows you to mount an S3 bucket as a file system.
 - FUSE file systems based on S3 typically have performance problems, especially with small files and metadata operations.
 - GeeseFS **attempts to solve these problems** by using aggressive parallelism and asynchrony.
 - GeeseFS is stable enough to pass most applicable xfstests, including dirstress/fsstress stress-tests (generic/007, generic/011, generic/013).
-- Benchmarks compared to rclone+cache, goofys and s3fs: <https://github.com/yandex-cloud/geesefs/tree/master/bench>
+- [Benchmarks](https://github.com/yandex-cloud/geesefs/tree/master/bench) compared to rclone+cache, goofys and s3fs.
 
 ## k8s-csi-s3 Diagram
 
@@ -29,8 +27,9 @@ The following diagram shows how k8s-csi-s3 works on a DigitalOcean Kubernetes cl
 
 ## Software included
 
-| Package | License |
-| --------| ------- |
+
+| Package    | License                                                                      |
+| ------------ | ------------------------------------------------------------------------------ |
 | k8s-csi-s3 | [Apache 2.0](https://github.com/yandex-cloud/k8s-csi-s3/blob/master/LICENSE) |
 
 ## Connecting to Your Cluster
@@ -41,21 +40,19 @@ You can connect to your DigitalOcean Kubernetes cluster by following our [how-to
 
 **Prerequisites**
 
-1. A DigitalOcean [Spaces Object Storage subscription](https://docs.digitalocean.com/products/spaces/how-to/create/)
-2. A Spaces API [Access Key](https://docs.digitalocean.com/products/spaces/how-to/manage-access/#access-keys)
+1. A DigitalOcean[Spaces Object Storage subscription](https://docs.digitalocean.com/products/spaces/how-to/create/)
+2. A Spaces [API Access Key](https://docs.digitalocean.com/products/spaces/how-to/manage-access/#access-keys)
 
-First, let's check that the 1-Click deployed succesfully with: `kubectl get storageclasses.storage.k8s.io`
-We should see a new StorageClass called `csi-s3`
+1. First, let's check that the 1-Click deployed succesfully with: `kubectl get storageclasses.storage.k8s.io`, we should see a new StorageClass called `csi-s3`
 
-`
-NAME                          PROVISIONER                 RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
-csi-s3                        ru.yandex.s3.csi            Delete          Immediate           false                  24m
-`
+```text
+NAME                          PROVISIONER                 RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE csi-s3                        ru.yandex.s3.csi            Delete          Immediate           false                  24m
+```
 
-We must create a secret in our cluster so that k8s-csi-s3 can authenticate against your DigitalOcean Spaces account
+2. We must create a secret in our cluster so that k8s-csi-s3 can authenticate against your DigitalOcean Spaces account
 
 Replace the `endpoint` URL with the same region as your DOKS cluster.
-<br>Spaces availability per region is detailed [here.](https://docs.digitalocean.com/products/platform/availability-matrix/#other-product-availability)
+`<br>`Spaces availability per region is detailed [here.](https://docs.digitalocean.com/products/platform/availability-matrix/#other-product-availability)
 
 ```yaml
 apiVersion: v1
@@ -73,7 +70,7 @@ stringData:
 
 #### Deploy an example PVC
 
-1. Create a Dynamically provisioned PVC using the new storage class. A bucket or path inside bucket will be created automatically for the PV and removed when the PV will be removed
+Create a Dynamically provisioned PVC using the new storage class. A bucket or path inside bucket will be created automatically for the PV and removed when the PV will be removed
 
 ```yaml
 apiVersion: v1
@@ -92,15 +89,14 @@ spec:
 
 `kubectl create -f https://raw.githubusercontent.com/digitalocean/marketplace-kubernetes/master/stacks/csi-s3/assets/examples/pvc.yaml`
 
-2. Check if the PVC has been bound:
+Check if the PVC has been bound with `kubectl get pvc csi-s3-pvc`
 
-    ```text
-    $ kubectl get pvc csi-s3-pvc
-    NAME         STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
-    csi-s3-pvc   Bound    pvc-0e100142-1836-4a6e-8590-87fd78e26d2b   5Gi        RWX            csi-s3         <unset>                 31m
-    ```
+```text
+NAME         STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+csi-s3-pvc   Bound    pvc-0e100142-1836-4a6e-8590-87fd78e26d2b   5Gi        RWX            csi-s3         <unset>                 31m
+```
 
-At this stage you'll see a new bucket created in your DigitalOcean account
+At this stage you'll see a new bucket created in your DigitalOcean account:
 
 ![Spaces Console](assets/images/spaces-console.png)
 
@@ -121,7 +117,7 @@ I0614 11:42:00.657408       1 controllerserver.go:91] create volume pvc-0e100142
 
 #### Deploy an example Pod
 
-Create a test pod that mounts your volume:
+1. Create a test pod that mounts your volume:
 
 ```yaml
 apiVersion: v1
@@ -147,11 +143,12 @@ spec:
 
 If the pod can start, everything should be working.
 
-Test the mount
+2. Test the mount
 
-`kubectl exec -it pod/csi-s3-test-nginx -- bash`
-
-`mount | grep fuse`
+```bash
+kubectl exec -it pod/csi-s3-test-nginx -- bash
+mount | grep fuse
+```
 
 ```text
 pvc-035763df-0488-4941-9a34-f637292eb95c: on /usr/share/nginx/html/s3 type fuse.geesefs (rw,nosuid,nodev,relatime,user_id=65534,group_id=0,default_permissions,allow_other)
@@ -159,7 +156,7 @@ pvc-035763df-0488-4941-9a34-f637292eb95c: on /usr/share/nginx/html/s3 type fuse.
 
 `touch /usr/share/nginx/html/s3/hello_world`
 
-You'll see a blank `hello_world` created in your bucket
+You'll see a blank `hello_world` created in your bucket:
 
 ![hello world file](assets/images/spaces-files-listing.png)
 
@@ -171,14 +168,15 @@ Spaces Object Storage limits are [detailed here](https://docs.digitalocean.com/p
 
 ### Tests using `dd` and `fio`
 
-- Use [`gen_small.py`](https://github.com/yandex-cloud/geesefs/blob/master/bench/gen_small.py) to create 6400 files, sized 0.5-300KB, 30KB on average, sharded over 1024 dirs with 2 level deep nesting
+- Use[`gen_small.py`](https://github.com/yandex-cloud/geesefs/blob/master/bench/gen_small.py) to create 6400 files, sized 0.5-300KB, 30KB on average, sharded over 1024 dirs with 2 level deep nesting
   - Copy this directory
   - Delete this directory
 - Write 1GB and 5GB files to Spaces Object Storage
 - Read 1GB and 5GB files from Spaces Object Storage
 
+
 | Test                 | Command                                                      | Time      | Detail    |
-|----------------------|--------------------------------------------------------------|-----------|-----------|
+| ---------------------- | -------------------------------------------------------------- | ----------- | ----------- |
 | Create 6400 files    | python3 gen_small.py /mnt/s3/test1                           | 11.3 s    |           |
 | Copy the directory   | cp -r test1 test2                                            | 7.8 s     |           |
 | Delete the directory | rm -r test1                                                  | 1.2 s     |           |
