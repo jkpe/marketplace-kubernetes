@@ -54,6 +54,8 @@ NAME                          PROVISIONER                 RECLAIMPOLICY   VOLUME
 Replace the `endpoint` URL with the same region as your DOKS cluster.
 `<br>`Spaces availability per region is detailed [here.](https://docs.digitalocean.com/products/platform/availability-matrix/#other-product-availability)
 
+`kubectl apply -f secret.yaml --force`
+
 ```yaml
 apiVersion: v1
 kind: Secret
@@ -72,6 +74,8 @@ stringData:
 
 Create a Dynamically provisioned PVC using the new storage class. A bucket or path inside bucket will be created automatically for the PV and removed when the PV will be removed
 
+`kubectl create -f https://raw.githubusercontent.com/digitalocean/marketplace-kubernetes/master/stacks/csi-s3/assets/examples/pvc.yaml`
+
 ```yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -87,8 +91,6 @@ spec:
   storageClassName: csi-s3
 ```
 
-`kubectl create -f https://raw.githubusercontent.com/digitalocean/marketplace-kubernetes/master/stacks/csi-s3/assets/examples/pvc.yaml`
-
 Check if the PVC has been bound with `kubectl get pvc csi-s3-pvc`
 
 ```text
@@ -103,21 +105,22 @@ At this stage you'll see a new bucket created in your DigitalOcean account:
 And you'll see the S3 bucket created in the provisioner logs `kubectl logs -l app=csi-s3-provisioner -c csi-s3 -n kube-system`
 
 ```text
-I0614 11:40:30.145112       1 driver.go:81] Enabling controller service capability: CREATE_DELETE_VOLUME
-I0614 11:40:30.145121       1 driver.go:93] Enabling volume access mode: MULTI_NODE_MULTI_WRITER
-I0614 11:40:30.145491       1 server.go:108] Listening for connections on address: &net.UnixAddr{Name:"//var/lib/kubelet/plugins/ru.yandex.s3.csi/csi.sock", Net:"unix"}
-I0614 11:40:30.798063       1 utils.go:97] GRPC call: /csi.v1.Identity/Probe
-I0614 11:40:30.798942       1 utils.go:97] GRPC call: /csi.v1.Identity/GetPluginInfo
-I0614 11:40:30.800097       1 utils.go:97] GRPC call: /csi.v1.Identity/GetPluginCapabilities
-I0614 11:40:30.800931       1 utils.go:97] GRPC call: /csi.v1.Controller/ControllerGetCapabilities
-I0614 11:41:54.254968       1 utils.go:97] GRPC call: /csi.v1.Controller/CreateVolume
-I0614 11:41:54.255071       1 controllerserver.go:69] Got a request to create volume pvc-0e100142-1836-4a6e-8590-87fd78e26d2b
-I0614 11:42:00.657408       1 controllerserver.go:91] create volume pvc-0e100142-1836-4a6e-8590-87fd78e26d2b
+Defaulted container "csi-provisioner" out of: csi-provisioner, csi-s3
+I0615 14:31:09.754459       1 reflector.go:255] Listing and watching *v1.PersistentVolume from sigs.k8s.io/sig-storage-lib-external-provisioner/v6/controller/controller.go:872
+I0615 14:31:09.853777       1 shared_informer.go:270] caches populated
+I0615 14:31:09.854955       1 controller.go:887] Started provisioner controller ru.yandex.s3.csi_csi-s3-provisioner-0_c9b0cf7a-ff61-4d4b-9344-06d5c82f050b!
+I0615 14:34:27.162321       1 controller.go:1335] provision "default/csi-s3-pvc" class "csi-s3": started
+I0615 14:34:27.163188       1 event.go:282] Event(v1.ObjectReference{Kind:"PersistentVolumeClaim", Namespace:"default", Name:"csi-s3-pvc", UID:"fcf035ac-7942-4708-a187-e209c411c5e1", APIVersion:"v1", ResourceVersion:"3581", FieldPath:""}): type: 'Normal' reason: 'Provisioning' External provisioner is provisioning volume for claim "default/csi-s3-pvc"
+I0615 14:34:34.140206       1 controller.go:762] create volume rep: {CapacityBytes:5368709120 VolumeId:pvc-fcf035ac-7942-4708-a187-e209c411c5e1 VolumeContext:map[capacity:5368709120 mounter:geesefs options:--memory-limit 1000 --dir-mode 0777 --file-mode 0666] ContentSource:<nil> AccessibleTopology:[] XXX_NoUnkeyedLiteral:{} XXX_unrecognized:[] XXX_sizecache:0}
+I0615 14:34:34.140450       1 controller.go:838] successfully created PV pvc-fcf035ac-7942-4708-a187-e209c411c5e1 for PVC csi-s3-pvc and csi volume name pvc-fcf035ac-7942-4708-a187-e209c411c5e1
+I0615 14:34:34.140637       1 controller.go:1442] provision "default/csi-s3-pvc" class "csi-s3": volume "pvc-fcf035ac-7942-4708-a187-e209c411c5e1" provisioned
+I0615 14:34:34.140778       1 controller.go:1459] provision "default/csi-s3-pvc" class "csi-s3": succeeded
+I0615 14:34:34.155331       1 event.go:282] Event(v1.ObjectReference{Kind:"PersistentVolumeClaim", Namespace:"default", Name:"csi-s3-pvc", UID:"fcf035ac-7942-4708-a187-e209c411c5e1", APIVersion:"v1", ResourceVersion:"3581", FieldPath:""}): type: 'Normal' reason: 'ProvisioningSucceeded' Successfully provisioned volume pvc-fcf035ac-7942-4708-a187-e209c411c5e1
 ```
 
 #### Deploy an example Pod
 
-1. Create a test pod that mounts your volume:
+1. Create a test pod that mounts your volume: `kubectl create -f https://raw.githubusercontent.com/digitalocean/marketplace-kubernetes/master/stacks/csi-s3/assets/examples/pod.yaml`
 
 ```yaml
 apiVersion: v1
@@ -138,8 +141,6 @@ spec:
        claimName: csi-s3-pvc
        readOnly: false
 ```
-
-`kubectl create -f https://raw.githubusercontent.com/digitalocean/marketplace-kubernetes/master/stacks/csi-s3/assets/examples/pod.yaml`
 
 If the pod can start, everything should be working.
 
@@ -217,4 +218,9 @@ Mixed Random Read/Write IOPS: 46/14
 
 ## Upgrade instructions
 
+`helm repo update`
+`helm upgrade csi-s3 yandex-s3/csi-s3 --namespace csi-s3`
+
 ## Uninstall instructions
+
+`helm uninstall csi-s3 --namespace csi-s3`
