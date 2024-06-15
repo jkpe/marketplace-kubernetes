@@ -1,5 +1,18 @@
 # Description
 
+## Table of Contents
+- [Description](#description)
+- [Prerequisites](#prerequisites)
+- [About GeeseFS](#about-geesefs)
+- [k8s-csi-s3 Diagram](#k8s-csi-s3-diagram)
+- [Software included](#software-included)
+- [Getting Started](#getting-started)
+  - [Using k8s-csi-s3 for the first time](#using-k8s-csi-s3-for-the-first-time)
+  - [Using k8s-csi-s3 with your workloads](#using-k8s-csi-s3-with-your-workloads)
+- [Benchmarks](#benchmarks)
+- [Upgrade instructions](#upgrade-instructions)
+- [Uninstall instructions](#uninstall-instructions)
+
 [k8s-csi-s3](https://github.com/yandex-cloud/k8s-csi-s3) allows you to use a DigitalOcean Spaces Object Storage bucket as ReadWriteMany (RWX) storage for a Kubernetes Pod with DOKS (DigitalOcean Kubernetes). By default, csi-s3 will create a new bucket per volume. The bucket name will match that of the volume ID. Under the hood it uses [GeeseFS](https://github.com/yandex-cloud/geesefs) which allows you to mount an S3 bucket as a file system.
 
 **Prerequisites**
