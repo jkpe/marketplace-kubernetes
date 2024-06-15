@@ -43,10 +43,14 @@ You can connect to your DigitalOcean Kubernetes cluster by following our [how-to
 1. A DigitalOcean[Spaces Object Storage subscription](https://docs.digitalocean.com/products/spaces/how-to/create/)
 2. A Spaces [API Access Key](https://docs.digitalocean.com/products/spaces/how-to/manage-access/#access-keys)
 
-1. First, let's check that the 1-Click deployed succesfully with: `kubectl get storageclasses.storage.k8s.io`, we should see a new StorageClass called `csi-s3`
+1. First, let's check that the 1-Click deployed succesfully with: `kubectl get storageclasses.storage.k8s.io --output name`, we should see a new StorageClass called `csi-s3`
 
 ```text
-NAME                          PROVISIONER                 RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE csi-s3                        ru.yandex.s3.csi            Delete          Immediate           false                  24m
+storageclass.storage.k8s.io/csi-s3
+storageclass.storage.k8s.io/do-block-storage
+storageclass.storage.k8s.io/do-block-storage-retain
+storageclass.storage.k8s.io/do-block-storage-xfs
+storageclass.storage.k8s.io/do-block-storage-xfs-retain
 ```
 
 2. We must create a secret in our cluster so that k8s-csi-s3 can authenticate against your DigitalOcean Spaces account
