@@ -1,11 +1,13 @@
 # Description
 
-[k8s-csi-s3](https://github.com/yandex-cloud/k8s-csi-s3) allows you to use a DigitalOcean Spaces Object Storage bucket as ReadWriteMany (RWX) storage for a Kubernetes Pod with DOKS (DigitalOcean Kubernetes).
+[k8s-csi-s3](https://github.com/yandex-cloud/k8s-csi-s3) allows you to use a DigitalOcean Spaces Object Storage bucket as ReadWriteMany (RWX) storage for a Kubernetes Pod with DOKS (DigitalOcean Kubernetes). By default, csi-s3 will create a new bucket per volume. The bucket name will match that of the volume ID. Under the hood it uses [GeeseFS](https://github.com/yandex-cloud/geesefs) which allows you to mount an S3 bucket as a file system.
 
-By default, csi-s3 will create a new bucket per volume. The bucket name will match that of the volume ID. Under the hood it uses [GeeseFS](https://github.com/yandex-cloud/geesefs) which allows you to mount an S3 bucket as a file system.
+**Prerequisites**
 
-**Note:**
-As S3 is not a real file system there are some [limitations](https://github.com/yandex-cloud/geesefs#posix-compatibility-matrix) to consider.
+1. A DigitalOcean[Spaces Object Storage subscription](https://docs.digitalocean.com/products/spaces/how-to/create/)
+2. A Spaces [API Access Key](https://docs.digitalocean.com/products/spaces/how-to/manage-access/#access-keys)
+
+**Note:** As S3 is not a real file system there are some [limitations](https://github.com/yandex-cloud/geesefs#posix-compatibility-matrix) to consider.
 
 > *[DigitalOcean Spaces Object Storage](https://www.digitalocean.com/products/spaces) is an S3-compatible object storage service that lets you store and serve large amounts of data. Each Space is a bucket for you to store and serve files. The built-in Spaces CDN minimizes page load times and improves performance.*
 
@@ -17,7 +19,7 @@ As S3 is not a real file system there are some [limitations](https://github.com/
 - FUSE file systems based on S3 typically have performance problems, especially with small files and metadata operations.
 - GeeseFS **attempts to solve these problems** by using aggressive parallelism and asynchrony.
 - GeeseFS is stable enough to pass most applicable xfstests, including dirstress/fsstress stress-tests (generic/007, generic/011, generic/013).
-- [Benchmarks](https://github.com/yandex-cloud/geesefs/tree/master/bench) compared to rclone+cache, goofys and s3fs.
+- [Benchmarks](#Benchmarks) compared to rclone+cache, goofys and s3fs.
 
 ## k8s-csi-s3 Diagram
 
@@ -37,11 +39,6 @@ The following diagram shows how k8s-csi-s3 works on a DigitalOcean Kubernetes cl
 You can connect to your DigitalOcean Kubernetes cluster by following our [how-to guide](https://www.digitalocean.com/docs/kubernetes/how-to/connect-to-cluster).
 
 ### Using k8s-csi-s3 for the first time
-
-**Prerequisites**
-
-1. A DigitalOcean[Spaces Object Storage subscription](https://docs.digitalocean.com/products/spaces/how-to/create/)
-2. A Spaces [API Access Key](https://docs.digitalocean.com/products/spaces/how-to/manage-access/#access-keys)
 
 1. First, let's check that the 1-Click deployed succesfully with: `kubectl get storageclasses.storage.k8s.io --output name`, we should see a new StorageClass called `csi-s3`
 
