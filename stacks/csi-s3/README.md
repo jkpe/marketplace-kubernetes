@@ -29,12 +29,11 @@ The following diagram shows how k8s-csi-s3 works on a DigitalOcean Kubernetes cl
 
 ## Software included
 
-
 | Package    | License                                                                      |
 | ------------ | ------------------------------------------------------------------------------ |
 | k8s-csi-s3 | [Apache 2.0](https://github.com/yandex-cloud/k8s-csi-s3/blob/master/LICENSE) |
 
-## Connecting to Your Cluster
+## Getting Started
 
 You can connect to your DigitalOcean Kubernetes cluster by following our [how-to guide](https://www.digitalocean.com/docs/kubernetes/how-to/connect-to-cluster).
 
