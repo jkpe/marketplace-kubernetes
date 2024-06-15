@@ -4,7 +4,7 @@
 
 **Prerequisites**
 
-1. A DigitalOcean[Spaces Object Storage subscription](https://docs.digitalocean.com/products/spaces/how-to/create/)
+1. A DigitalOcean [Spaces Object Storage subscription](https://docs.digitalocean.com/products/spaces/how-to/create/)
 2. A Spaces [API Access Key](https://docs.digitalocean.com/products/spaces/how-to/manage-access/#access-keys)
 
 **Note:** As S3 is not a real file system there are some [limitations](https://github.com/yandex-cloud/geesefs#posix-compatibility-matrix) to consider.
