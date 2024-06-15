@@ -75,7 +75,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: csi-s3-secret
-  namespace: kube-system
+  namespace: csi-s3
 stringData:
   accessKeyID: <YOUR_ACCESS_KEY_ID>
   secretAccessKey: <YOUR_SECRET_ACCESS_KEY>
