@@ -64,8 +64,9 @@ storageclass.storage.k8s.io/do-block-storage-xfs-retain
 
 2. We must create a secret in our cluster so that k8s-csi-s3 can authenticate against your DigitalOcean Spaces account
 
-Replace the `endpoint` URL with the same region as your DOKS cluster.
-`<br>`Spaces availability per region is detailed [here.](https://docs.digitalocean.com/products/platform/availability-matrix/#other-product-availability)
+Replace the `endpoint` URL with the same region as your DOKS cluster (or closest Spaces region). Ideally, to reduce latency you'll want your DOKS cluster and Spaces buckets in the same region.
+
+Spaces availability per region is detailed [here.](https://docs.digitalocean.com/products/platform/availability-matrix/#other-product-availability)
 
 `kubectl apply -f secret.yaml --force`
 
