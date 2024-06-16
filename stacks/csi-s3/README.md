@@ -1,17 +1,4 @@
-# Description
-
-## Table of Contents
-- [Description](#description)
-- [Prerequisites](#prerequisites)
-- [About GeeseFS](#about-geesefs)
-- [k8s-csi-s3 Diagram](#k8s-csi-s3-diagram)
-- [Software included](#software-included)
-- [Getting Started](#getting-started)
-  - [Using k8s-csi-s3 for the first time](#using-k8s-csi-s3-for-the-first-time)
-  - [Using k8s-csi-s3 with your workloads](#using-k8s-csi-s3-with-your-workloads)
-- [Benchmarks](#benchmarks)
-- [Upgrade instructions](#upgrade-instructions)
-- [Uninstall instructions](#uninstall-instructions)
+# k8s-csi-s3
 
 [k8s-csi-s3](https://github.com/yandex-cloud/k8s-csi-s3) allows you to use a DigitalOcean Spaces Object Storage bucket as ReadWriteMany (RWX) storage for a Kubernetes Pod with DOKS (DigitalOcean Kubernetes). By default, csi-s3 will create a new bucket per volume. The bucket name will match that of the volume ID. Under the hood it uses [GeeseFS](https://github.com/yandex-cloud/geesefs) which allows you to mount an S3 bucket as a file system.
 
@@ -38,9 +25,10 @@
 
 The following diagram shows how k8s-csi-s3 works on a DigitalOcean Kubernetes cluster (DOKS) (based on the example used in the getting started section):
 
-![k8s-csi-s3 Diagram](assets/images/k8s-csi-s3-doks.png)
+<img src="assets/images/k8s-csi-s3-doks.png" alt="k8s-csi-s3 Diagram" width="600">
 
 ## Software included
+
 
 | Package    | License                                                                      |
 | ------------ | ------------------------------------------------------------------------------ |
@@ -62,9 +50,9 @@ storageclass.storage.k8s.io/do-block-storage-xfs
 storageclass.storage.k8s.io/do-block-storage-xfs-retain
 ```
 
-2. We must create a secret in our cluster so that k8s-csi-s3 can authenticate against your DigitalOcean Spaces account
+2. Create a secret in your cluster to enable k8s-csi-s3 to authenticate with your DigitalOcean Spaces account
 
-Replace the `endpoint` URL with the same region as your DOKS cluster (or closest Spaces region). Ideally, to reduce latency you'll want your DOKS cluster and Spaces buckets in the same region.
+Update the `endpoint` URL to match the region of your DOKS cluster (or the nearest Spaces region). For optimal performance, ensure that your DOKS cluster and Spaces buckets are located in the same region to minimize latency.
 
 Spaces availability per region is detailed [here.](https://docs.digitalocean.com/products/platform/availability-matrix/#other-product-availability)
 
@@ -114,7 +102,7 @@ csi-s3-pvc   Bound    pvc-0e100142-1836-4a6e-8590-87fd78e26d2b   5Gi        RWX 
 
 At this stage you'll see a new bucket created in your DigitalOcean account:
 
-![Spaces Console](assets/images/spaces-console.png)
+<img src="assets/images/spaces-console.png" alt="Spaces Console" style="max-width: 600px;">
 
 And you'll see the S3 bucket created in the provisioner logs `kubectl logs -l app=csi-s3-provisioner -c csi-s3 -n kube-system`
 
@@ -173,7 +161,7 @@ pvc-035763df-0488-4941-9a34-f637292eb95c: on /usr/share/nginx/html/s3 type fuse.
 
 You'll see a blank `hello_world` created in your bucket:
 
-![hello world file](assets/images/spaces-files-listing.png)
+<img src="assets/images/spaces-files-listing.png" alt="hello world file" style="max-width: 600px;">
 
 **For additional configuration options such as using an existing bucket see: [Additional Configuration](https://github.com/yandex-cloud/k8s-csi-s3/tree/master?tab=readme-ov-file#additional-configuration)**
 
