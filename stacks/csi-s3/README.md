@@ -86,7 +86,7 @@ stringData:
 
 #### Deploy an example PVC
 
-Create a Dynamically provisioned PVC using the new storage class. A bucket or path inside bucket will be created automatically for the PV and removed when the PV will be removed
+Create a Dynamically provisioned PVC using the new storage class. A DigitalOcean Spaces bucket will be created automatically for the PV and removed when the PV is removed.
 
 `kubectl create -f https://raw.githubusercontent.com/digitalocean/marketplace-kubernetes/master/stacks/csi-s3/assets/examples/pvc.yaml`
 
