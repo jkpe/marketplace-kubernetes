@@ -7,10 +7,11 @@
     {
       "matchPaths": ["stacks/csi-s3/deploy.sh"],
       "matchPackagePatterns": ["CHART_VERSION"],
-      "datasources": [
+      "replaceStrings": [
         {
           "datasource": "github-releases",
-          "lookupName": "yandex-cloud/k8s-csi-s3"
+          "lookupName": "yandex-cloud/k8s-csi-s3",
+          "extractVersion": "^v(?<version>\\d+\\.\\d+\\.\\d+)$"
         }
       ]
     }
