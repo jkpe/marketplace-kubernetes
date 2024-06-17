@@ -8,8 +8,7 @@
       "^stacks/.*/deploy\\.sh$"
     ],
     "commitMessageTopic": "{{depName}} helm chart in {{parentDir}}",
-    "extractVersion": "^CHART_VERSION=\"([^\"]+)\"$",
-    "lookupName": "{{CHART}}"
+    "extractVersion": "^CHART_VERSION=\"([^\"]+)\"$"
   },
   "regexManagers": [
     {
