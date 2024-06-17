@@ -8,10 +8,24 @@
   ],
   "helm-values": {
     "fileMatch": [
-      "deploy\\.sh$"
+      "^stacks/.*/deploy\\.sh$"
     ],
     "commitMessageTopic": "{{depName}} helm chart in {{parentDir}}",
     "extractVersion": "^CHART_VERSION=\"([^\"]+)\"$",
     "lookupName": "{{CHART}}"
-  }
+  },
+  "regexManagers": [
+    {
+      "fileMatch": [
+        "^stacks/.*/deploy\\.sh$"
+      ],
+      "matchStrings": [
+        "CHART=\"(?<depName>[^\"]+)\"",
+        "STACK=\"(?<stackName>[^\"]+)\"",
+        "CHART_VERSION=\"(?<currentValue>[^\"]+)\""
+      ],
+      "datasourceTemplate": "helm",
+      "versioningTemplate": "semver"
+    }
+  ]
 }
