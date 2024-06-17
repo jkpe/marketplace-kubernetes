@@ -3,9 +3,6 @@
   "extends": [
     "config:recommended"
   ],
-  "fileMatch": [
-    "^stacks/.*/deploy\\.sh$"
-  ],
   "helm-values": {
     "fileMatch": [
       "^stacks/.*/deploy\\.sh$"
