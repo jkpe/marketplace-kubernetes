@@ -1,5 +1,4 @@
 {
-  "extends": ["config:base"],
   "packageRules": [
     {
       "matchPaths": ["stacks/csi-s3/deploy.sh"],
@@ -9,8 +8,7 @@
           "datasource": "github-releases",
           "lookupName": "yandex-cloud/k8s-csi-s3"
         }
-      ],
-      "versioning": "semver"
+      ]
     }
   ]
 }
