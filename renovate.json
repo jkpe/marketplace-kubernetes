@@ -2,5 +2,16 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
-  ]
+  ],
+  "fileMatch": [
+    "^stacks/.*/deploy\\.sh$"
+  ],
+  "helm-values": {
+    "fileMatch": [
+      "deploy\\.sh$"
+    ],
+    "commitMessageTopic": "{{depName}} helm chart in {{parentDir}}",
+    "extractVersion": "^CHART_VERSION=\"([^\"]+)\"$",
+    "lookupName": "{{CHART}}"
+  }
 }
